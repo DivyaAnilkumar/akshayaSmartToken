@@ -1,10 +1,22 @@
+
 const mongoose = require('mongoose');
 
-const AkshayaCenterSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  services: [String],
-  approved: { type: Boolean, default: false },
-  legalCertificate: { type: String, required: true },
+
+const akshayaCenterSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    location: { type: String, required: true },
+    services: { type: String, required: true }, 
+    contact_number: { type: String, required: true },
+    status: { 
+        type: String, 
+        enum: ['pending', 'approved', 'rejected'], 
+        required: true 
+    },
+    admin_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
-module.exports = mongoose.model('akshayacenter', AkshayaCenterSchema);
+
+const AkshayaCenter = mongoose.model('AkshayaCenter', akshayaCenterSchema);
+
+
+module.exports = AkshayaCenter;
