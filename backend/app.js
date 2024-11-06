@@ -3,9 +3,13 @@ const connectDB = require('./db/connection');
 const authRoutes = require('./routes/adminLoginRoutes');
 const centerRoutes = require('./routes/centerRoutes');
 const userRoutes = require('./routes/userRoutes');
+const cors = require('cors');
+
+
 require('dotenv').config();
 
 const app = express();
+app.use(cors());
 connectDB();
 
 
