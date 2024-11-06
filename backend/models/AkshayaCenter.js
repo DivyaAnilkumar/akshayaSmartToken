@@ -9,6 +9,7 @@ const akshayaCenterSchema = new mongoose.Schema({
     // legalCertificatePath: { type: String, required: true },  // Encrypted path
     tokenGenerationEnabled: { type: Boolean, default: true }, // Controls token generation
     status: { type: String, enum: ['active', 'deactive', 'blocked'], default: 'active' },
+    currentServicingTokenNumber: { type: Number, default: 0 },  // Current token number being serviced
     location: { type: String },
     currentPeopleCount: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now },

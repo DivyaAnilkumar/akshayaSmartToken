@@ -101,5 +101,71 @@ router.patch(
         }
     }
 );
+router.patch(
+    '/increase-servicing-token',
+    // authMiddleware,
+    [
+        body('centerId').notEmpty().withMessage('Center ID is required')
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const { centerId } = req.body;
+
+        try {
+            // Find the Akshaya Center by ID
+            const akshayaCenter = await AkshayaCenter.findById(centerId);
+            if (!akshayaCenter) {
+                return res.status(404).json({ message: 'Akshaya Center not found' });
+            }
+
+            // Increment the current servicing token number
+            akshayaCenter.currentServicingTokenNumber += 1;
+            await akshayaCenter.save();
+
+            res.status(200).json({
+                message: 'Current servicing token number increased',
+                currentServicingTokenNumber: akshayaCenter.currentServicingTokenNumber
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Server error' });
+        }
+    }
+);
+router.get(
+    '/:centerId/current-servicing-token',
+    async (req, res) => {
+        const { centerId } = req.params;
+
+        try {
+            // Find the Akshaya Center by ID
+            const akshayaCenter = await AkshayaCenter.findById(centerId).select('centerName currentServicingTokenNumber currentPeopleCount status');
+
+            if (!akshayaCenter) {
+                return res.status(404).json({ message: 'Akshaya Center not found' });
+            }
+
+            if (akshayaCenter.status !== 'active') {
+                return res.status(400).json({ message: 'Akshaya Center is currently unavailable' });
+            }
+
+            // Send the current servicing token number and other details
+            res.status(200).json({
+                centerName: akshayaCenter.centerName,
+                currentServicingTokenNumber: akshayaCenter.currentServicingTokenNumber,
+                currentPeopleCount: akshayaCenter.currentPeopleCount
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Server error' });
+        }
+    }
+);
+
+
 
 module.exports = router;
