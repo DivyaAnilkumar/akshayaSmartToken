@@ -159,7 +159,7 @@ router.post(
     [
         body('centerId').notEmpty().withMessage('Center ID is required'),
         // body('serviceId').notEmpty().withMessage('Service ID is required'),
-        body('tokenTime').notEmpty().withMessage('Token time is required')
+        // body('tokenTime').notEmpty().withMessage('Token time is required')
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -167,7 +167,7 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { centerId, tokenTime, userId} = req.body;
+        const { centerId, userId} = req.body;
         // const userId = req.user.userId;
 
         try {
@@ -180,6 +180,21 @@ router.post(
                 return res.status(400).json({ message: 'Token generation is currently disabled for this center' });
             }
 
+            // Get the start of the current day (midnight)
+            const startOfToday = new Date();
+            startOfToday.setHours(0, 0, 0, 0);
+
+            // Check if the user already generated a token today for this center
+            const existingToken = await Token.findOne({
+                userId,
+                centerId,
+                createdAt: { $gte: startOfToday }
+            });
+
+            if (existingToken) {
+                return res.status(400).json({ message: 'You can only generate one token per day at this center.' });
+            }
+
             // Generate a unique token number (incrementing by count of current tokens for simplicity)
             const tokenCount = await Token.countDocuments({ centerId });
             const tokenNumber = tokenCount + 1;
@@ -189,7 +204,7 @@ router.post(
                 userId,
                 centerId,
                 // serviceId,
-                tokenTime,
+                // tokenTime,
                 tokenNumber
             });
             await newToken.save();

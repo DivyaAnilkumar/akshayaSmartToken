@@ -5,17 +5,17 @@ import axios from 'axios';
 const TokenGenerator = () => {
     const location = useLocation();
     const { centerId } = location.state || {}; // Get centerId from location state
-    const [tokenTime, setTokenTime] = useState('');
+    // const [tokenTime, setTokenTime] = useState('');
     const [tokenNumber, setTokenNumber] = useState(null);
     const [error, setError] = useState('');
 
     const handleGenerateToken = async () => {
         setError(''); // Clear previous errors
         try {
-            const userId = '672846869f798458fbd6f17a'; // Replace with the actual user ID logic
+            const userId = '6727913c8b4c27d56708221a'; // Replace with the actual user ID logic
             const response = await axios.post('http://localhost:5000/api/users/generate-token', {
                 centerId,
-                tokenTime,
+                // tokenTime,
                 userId // Send userId as well
             });
             setTokenNumber(response.data.tokenNumber); // Set the token number
@@ -33,14 +33,14 @@ const TokenGenerator = () => {
     return (
         <div>
             <h2>Generate Token</h2>
-            <div>
+            {/* <div>
                 <label>Token Time:</label>
                 <input
                     type="text"
                     value={tokenTime}
                     onChange={(e) => setTokenTime(e.target.value)}
                 />
-            </div>
+            </div> */}
             <button onClick={handleGenerateToken}>
                 Generate Token
             </button>

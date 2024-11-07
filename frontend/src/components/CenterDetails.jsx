@@ -93,10 +93,14 @@ const CenterDetails = () => {
     fetchCenterDetails();
   }, [centerId]);
 
-  const handleGenerateTokenClick = () => {
-    // Navigate to the TokenGenerator component, passing the centerId
-    navigate('/generate-token');
-  };
+  function handleGenerateTokenClick(centerId){
+    navigate('/generate-token',{state:{centerId}})
+  }
+
+  // const handleGenerateTokenClick = () => {
+  //   // Navigate to the TokenGenerator component, passing the centerId
+  //   navigate('/generate-token');
+  // };
 
   if (error) return <p>{error}</p>;
   if (!center) return <p>Loading...</p>;
@@ -116,7 +120,7 @@ const CenterDetails = () => {
       <h2>Token Information</h2>
       <p><strong>Current Token:</strong> {center.centerDetails.currentServicingTokenNumber || 'N/A'}</p>
       <p><strong>Total People Waiting:</strong> {center.centerDetails.currentPeopleCount || 'N/A'}</p>
-      <button onClick={handleGenerateTokenClick}>Generate Token</button>
+      <button onClick={()=>{handleGenerateTokenClick(centerId)}}>Generate Token</button>
     </div>
   );
 };
