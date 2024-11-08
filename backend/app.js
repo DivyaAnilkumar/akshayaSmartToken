@@ -1,8 +1,9 @@
 const express = require('express');
 const connectDB = require('./db/connection');
-const authRoutes = require('./routes/adminLoginRoutes');
+// const authRoutes = require('./routes/adminLoginRoutes');
 const centerRoutes = require('./routes/centerRoutes');
 const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/authRoutes')
 const cors = require('cors');
 
 
@@ -16,7 +17,7 @@ connectDB();
 app.use(express.json());
 
 
-// app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/centers', centerRoutes);
 app.use('/api/users', userRoutes);
 
