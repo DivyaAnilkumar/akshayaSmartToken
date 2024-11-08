@@ -5,6 +5,8 @@ const { body, validationResult , query} = require('express-validator');
 const User = require('../models/user');
  const Token = require('../models/tokenModel');
 const AkshayaCenter = require('../models/AkshayaCenter');
+const verifyToken = require("../middlewares/authMiddleware");
+const authorizeRoles = require("../middlewares/roleMiddleware")
 //const authMiddleware = require('../middleware/authMiddleware'); // JWT auth middleware
 
 const router = express.Router();
@@ -94,7 +96,7 @@ const router = express.Router();
 //     }
 // );
 router.get(
-  '/search-akshaya-centers',
+  '/search-akshaya-centers', verifyToken, authorizeRoles("user"),
   //authMiddleware,
   [
       query('location').optional().isString().withMessage('Location should be a valid string'),

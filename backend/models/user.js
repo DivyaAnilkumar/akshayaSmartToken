@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     name: { type: String }, // Required for users
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    passwordHash: { type: String, required: true },
     status: { type: String, enum: ['active', 'deactive'], default: 'active' },
     failedAttempts: { type: Number, default: 0 }, // For tracking login attempts
     lastLogin: { type: Date, default: Date.now },

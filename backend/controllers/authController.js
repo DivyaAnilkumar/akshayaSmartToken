@@ -18,7 +18,7 @@ const register = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password } = req.body;
+    const { name, email, password,role } = req.body;
 
     try {
         // Check if the email is already registered
@@ -32,11 +32,12 @@ const register = async (req, res) => {
         const passwordHash = await bcrypt.hash(password, salt);
 
         // Create user
-        const newUser = new User({ name, email, passwordHash });
+        const newUser = new User({ name, email, passwordHash, role });
         await newUser.save();
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: 'Server error' });
     }
 }
@@ -81,6 +82,7 @@ const login = async (req, res) =>{
             const token = jwt.sign({ userId: user._id , role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
             res.json({ token, message: 'Login successful' });
         } catch (error) {
+            console.log(error);
             res.status(500).json({ message: 'Server error' });
         }
     }
