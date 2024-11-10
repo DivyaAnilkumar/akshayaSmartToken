@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+// import axiosInstance from './axiosInstance'; // Import the axios instance you've set up
+
 
 const TokenGenerator = () => {
     const location = useLocation();
@@ -10,7 +12,26 @@ const TokenGenerator = () => {
     const [error, setError] = useState('');
     const [message, setMessage] = useState(''); // Friendly message
     const [isLoading, setIsLoading] = useState(false);
-    const userId = '6727913c8b4c27d56708221a'; // Replace with the actual user ID logic
+    const [userId, setUserId] = useState(null);
+    const [userRole, setUserRole] = useState(null);
+    useEffect(() => {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+            const user = JSON.parse(userData); // Parse the user object
+            setUserId(user.id); // Set userId
+            setUserRole(user.role); // Set userRole
+        } else {
+            setError('User not logged in');
+        }
+    }, []);
+
+    console.log('userId from localStorage:', userId);
+    console.log('userRole from localStorage:', userRole);
+
+    if (!userId) {
+        console.error("User ID is missing in localStorage.");
+        return <div>{error}</div>;
+    }
 
 
 
@@ -77,3 +98,76 @@ const TokenGenerator = () => {
 };
 
 export default TokenGenerator;
+
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import { useLocation } from 'react-router-dom';
+// import axios from 'axios';
+
+// const TokenGenerator = () => {
+//     const location = useLocation();
+//     const { centerId } = location.state || {}; // Get centerId from location state
+//     const [tokenNumber, setTokenNumber] = useState(null);
+//     const [error, setError] = useState('');
+//     const [message, setMessage] = useState(''); // Friendly message
+//     const [isLoading, setIsLoading] = useState(false);
+//     const [userId, setUserId] = useState(null);
+//     const [userRole, setUserRole] = useState(null);
+
+//     // Retrieve userId and role from localStorage
+//     useEffect(() => {
+//         const userData = localStorage.getItem('user');
+//         if (userData) {
+//             const user = JSON.parse(userData); // Parse the user object
+//             setUserId(user.id); // Set userId
+//             setUserRole(user.role); // Set userRole
+//         } else {
+//             setError('User not logged in');
+//         }
+//     }, []);
+
+//     console.log('userId from localStorage:', userId);
+//     console.log('userRole from localStorage:', userRole);
+
+//     if (!userId) {
+//         console.error("User ID is missing in localStorage.");
+//         return <div>{error}</div>;
+//     }
+
+//     // Handle the rest of your logic for token generation here
+//     const handleGenerateToken = async () => {
+//         if (!centerId) {
+//             setError('Center ID is missing');
+//             return;
+//         }
+        
+//         try {
+//             setIsLoading(true);
+//             const response = await axios.post('http://localhost:5000/api/users/generate-token', { userId, centerId });
+//             setTokenNumber(response.data.tokenNumber); // Assuming API returns a tokenNumber
+//             setMessage('Token generated successfully');
+//         } catch (err) {
+//             setError('Error generating token');
+//         } finally {
+//             setIsLoading(false);
+//         }
+//     };
+
+//     return (
+//         <div>
+//             <h3>Generate Token</h3>
+//             {error && <div className="error">{error}</div>}
+//             {message && <div className="message">{message}</div>}
+
+//             {/* Display token generation button and logic */}
+//             <button onClick={handleGenerateToken} disabled={isLoading}>
+//                 {isLoading ? 'Generating...' : 'Generate Token'}
+//             </button>
+//             {tokenNumber && <div>Generated Token Number: {tokenNumber}</div>}
+//         </div>
+//     );
+// };
+
+// export default TokenGenerator;

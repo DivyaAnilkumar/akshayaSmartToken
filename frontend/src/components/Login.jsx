@@ -42,6 +42,7 @@ import React, { useState } from "react";
 import "./Login.css";
 import { login } from "../services/AuthService";
 import { useNavigate } from "react-router-dom";
+// import jwt_decode from 'jwt-decode';
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,6 +53,9 @@ function Login() {
     // Handle login logic here
     login(email, password).then(
         (response) => {
+         
+          // Assuming the response contains the user details
+
             alert('Login successful');
             if (response.role === 'Admin') {
                 navigate('/admin'); // Redirect to admin dashboard
