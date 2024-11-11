@@ -8,16 +8,16 @@ const userSchema = new mongoose.Schema({
     failedAttempts: { type: Number, default: 0 }, // For tracking login attempts
     lastLogin: { type: Date, default: Date.now },
     role: { type: String, enum: ['admin', 'user', 'akshayaCenter'], required: true },
-    phoneNumber: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    carrier: {
-        type: String,
-        required: true,
-        enum: ['verizon', 'att', 'tmobile'] // or any other carriers you support
-    },
+    // phoneNumber: {
+    //     type: String,
+    //     required: true,
+    //     unique: true
+    // },
+    // carrier: {
+    //     type: String,
+    //     required: true,
+    //     enum: ['verizon', 'att', 'tmobile'] // or any other carriers you support
+    // },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
     // services: { type: [String] }, // Only required for akshayaCenter

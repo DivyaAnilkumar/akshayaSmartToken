@@ -5,7 +5,29 @@ const centerRoutes = require('./routes/centerRoutes');
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 const tokenRoutes = require('./routes/tokenRoutes');
+const { checkTokens } = require('./tokenService');
+const cron = require('node-cron');
+// async function checkTokens() {
+//     try {
+//         console.log('Checking tokens...');  // Add this log to confirm if the function is being called
+//         // Your existing logic...
+//     } catch (error) {
+//         console.error('Error checking tokens:', error);
+//     }
+// }
+// const { checkTokens } = require('./tokenService');
+
+
 const cors = require('cors');
+// Schedule the checkTokens function to run daily at a specific time (e.g., 9:00 AM)
+// cron.schedule('0 9 * * *', () => {
+//     console.log('Running daily token check');
+//     checkTokens();
+// });
+cron.schedule('* * * * *', () => {
+    console.log('Running daily token check');
+  checkTokens();
+});
 
 
 require('dotenv').config();
