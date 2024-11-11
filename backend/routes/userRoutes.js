@@ -214,14 +214,80 @@ router.post(
             // Update the current people count in the Akshaya Center
             akshayaCenter.currentPeopleCount += 1;
             await akshayaCenter.save();
+            res.status(201).json({ message: 'Token generated successfully', tokenId: newToken._id, tokenNumber: newToken.tokenNumber });
 
-            res.status(201).json({ message: 'Token generated successfully', tokenNumber: newToken.tokenNumber });
+
+            // res.status(201).json({ message: 'Token generated successfully', tokenNumber: newToken.tokenNumber });
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Server error' });
         }
     }
 );
+
+router.get('/token-details/:tokenId', async (req, res) => {
+    const { tokenId } = req.params;
+
+    try {
+        // Find the token by ID
+        const token = await Token.findById(tokenId);
+        if (!token) {
+            return res.status(404).json({ message: 'Token not found' });
+        }
+
+        // Find the user and center details
+        const user = await User.findById(token.userId);
+        const akshayaCenter = await AkshayaCenter.findById(token.centerId);
+
+        if (!user || !akshayaCenter) {
+            return res.status(404).json({ message: 'User or Center not found' });
+        }
+
+        // Prepare the response details
+        const response = {
+            tokenNumber: token.tokenNumber,
+            date: token.createdAt.toLocaleDateString(),
+            username: user.name,
+            centerName: akshayaCenter.centerName,
+            location: akshayaCenter.location,
+            // services: akshayaCenter.services
+        };
+
+        res.status(200).json(response);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+
+router.get('/token-detail/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        
+        // Query the database to get all tokens for the user, sorted by date in descending order
+        // const tokens = await Token.find({ userId }).sort({ createdAt : -1 }); 
+        const tokens = await Token.find({ userId })
+            .sort({ createdAt: -1 }) // Sort by createdAt (latest first)
+            .populate('userId', 'name') // Populate 'username' field from the 'User' model
+            .populate('centerId', 'centerName location') // Populate 'centerName' and 'location' from the 'AkshayaCenter' model
+        
+        
+        if (!tokens || tokens.length === 0) {
+            return res.status(404).json({ message: 'No tokens found' });
+        }
+        
+        // Return all token details sorted by date (latest first)
+        res.status(200).json(tokens);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+});
+
+
+
+
+
 
 
 // Route to generate token number (appointment) for a user at a specific Akshaya Center

@@ -9,6 +9,7 @@ import CenterDetails from './components/CenterDetails'
 import TokenGenerator from './components/TokenGenerator'
 import Login from './components/Login'
 import Register from './components/Register'
+import TokenDetails from './components/TokenDetails'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -27,6 +28,7 @@ function App() {
         <Route path="/list" element={<HomePage/>}/>
        <Route path="/center/:centerId" element={<CenterDetails />} />
         <Route path="/generate-token" element={<TokenGenerator/>}/>
+        <Route path="/tokens" element={<TokenDetails/>} />
         <Route path="/contact" element={<div>Contact Page</div>} />
        </Routes>
       </>
