@@ -4,6 +4,7 @@ import axios from 'axios';
 import './HomePage.css';
 import Navbar from './Navbar';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../axiosinterceptor';
 
 const HomePage = () => {
   const [centers, setCenters] = useState([]);
@@ -14,7 +15,15 @@ const HomePage = () => {
     // Fetch data from the backend
     const fetchCenters = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/users/search-akshaya-centers');
+        // const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).token : '';
+        
+        const response = await axiosInstance.get('http://localhost:5000/api/users/search-akshaya-centers');
+        // Include token in the request header
+        // const response = await axios.get('http://localhost:5000/api/users/search-akshaya-centers', {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`  // Add the token here
+        //   }
+        // });
         setCenters(response.data);
       } catch (error) {
         console.error("Error fetching centers:", error);

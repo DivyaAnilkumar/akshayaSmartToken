@@ -5,96 +5,98 @@ const { body, validationResult , query} = require('express-validator');
 const User = require('../models/user');
  const Token = require('../models/tokenModel');
 const AkshayaCenter = require('../models/AkshayaCenter');
+const verifyToken = require("../middlewares/authMiddleware");
+const authorizeRoles = require("../middlewares/roleMiddleware")
 //const authMiddleware = require('../middleware/authMiddleware'); // JWT auth middleware
 
 const router = express.Router();
 
 // Registration Route
-router.post(
-    '/register',
-    [
-        body('name').notEmpty().withMessage('Name is required'),
-        body('email').isEmail().withMessage('Enter a valid email'),
-        body('phone').notEmpty().withMessage('Phone number is required'),
-        body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
-    ],
-    async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
+// router.post(
+//     '/register',
+//     [
+//         body('name').notEmpty().withMessage('Name is required'),
+//         body('email').isEmail().withMessage('Enter a valid email'),
+//         body('phone').notEmpty().withMessage('Phone number is required'),
+//         body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
+//     ],
+//     async (req, res) => {
+//         const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             return res.status(400).json({ errors: errors.array() });
+//         }
 
-        const { name, email, phone, password } = req.body;
+//         const { name, email, phone, password } = req.body;
 
-        try {
-            // Check if the email is already registered
-            const existingUser = await User.findOne({ email });
-            if (existingUser) {
-                return res.status(400).json({ message: 'User already exists' });
-            }
+//         try {
+//             // Check if the email is already registered
+//             const existingUser = await User.findOne({ email });
+//             if (existingUser) {
+//                 return res.status(400).json({ message: 'User already exists' });
+//             }
 
-            // Hash password
-            const salt = await bcrypt.genSalt(10);
-            const passwordHash = await bcrypt.hash(password, salt);
+//             // Hash password
+//             const salt = await bcrypt.genSalt(10);
+//             const passwordHash = await bcrypt.hash(password, salt);
 
-            // Create user
-            const newUser = new User({ name, email, phone, passwordHash });
-            await newUser.save();
+//             // Create user
+//             const newUser = new User({ name, email, phone, passwordHash });
+//             await newUser.save();
 
-            res.status(201).json({ message: 'User registered successfully' });
-        } catch (error) {
-            res.status(500).json({ message: 'Server error' });
-        }
-    }
-);
+//             res.status(201).json({ message: 'User registered successfully' });
+//         } catch (error) {
+//             res.status(500).json({ message: 'Server error' });
+//         }
+//     }
+// );
 
 // Login Route
-router.post(
-    '/login',
-    [
-        body('email').isEmail().withMessage('Enter a valid email'),
-        body('password').notEmpty().withMessage('Password is required')
-    ],
-    async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
+// router.post(
+//     '/login',
+//     [
+//         body('email').isEmail().withMessage('Enter a valid email'),
+//         body('password').notEmpty().withMessage('Password is required')
+//     ],
+//     async (req, res) => {
+//         const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             return res.status(400).json({ errors: errors.array() });
+//         }
 
-        const { email, password } = req.body;
+//         const { email, password } = req.body;
 
-        try {
-            const user = await User.findOne({ email });
-            if (!user) {
-                return res.status(400).json({ message: 'Invalid email or password' });
-            }
+//         try {
+//             const user = await User.findOne({ email });
+//             if (!user) {
+//                 return res.status(400).json({ message: 'Invalid email or password' });
+//             }
 
-            // Check if user is blocked
-            if (user.failedAttempts >= 5) {
-                return res.status(403).json({ message: 'Account locked due to too many failed attempts' });
-            }
+//             // Check if user is blocked
+//             if (user.failedAttempts >= 5) {
+//                 return res.status(403).json({ message: 'Account locked due to too many failed attempts' });
+//             }
 
-            const isMatch = await bcrypt.compare(password, user.passwordHash);
-            if (!isMatch) {
-                user.failedAttempts += 1;
-                await user.save();
-                return res.status(400).json({ message: 'Invalid email or password' });
-            }
+//             const isMatch = await bcrypt.compare(password, user.passwordHash);
+//             if (!isMatch) {
+//                 user.failedAttempts += 1;
+//                 await user.save();
+//                 return res.status(400).json({ message: 'Invalid email or password' });
+//             }
 
-            // Reset failed attempts on successful login
-            user.failedAttempts = 0;
-            await user.save();
+//             // Reset failed attempts on successful login
+//             user.failedAttempts = 0;
+//             await user.save();
 
-            // Generate JWT token
-            const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            res.json({ token, message: 'Login successful' });
-        } catch (error) {
-            res.status(500).json({ message: 'Server error' });
-        }
-    }
-);
+//             // Generate JWT token
+//             const token = jwt.sign({ userId: user._id , role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+//             res.json({ token, message: 'Login successful' });
+//         } catch (error) {
+//             res.status(500).json({ message: 'Server error' });
+//         }
+//     }
+// );
 router.get(
-  '/search-akshaya-centers',
+  '/search-akshaya-centers', verifyToken, authorizeRoles("user"),
   //authMiddleware,
   [
       query('location').optional().isString().withMessage('Location should be a valid string'),
@@ -212,14 +214,80 @@ router.post(
             // Update the current people count in the Akshaya Center
             akshayaCenter.currentPeopleCount += 1;
             await akshayaCenter.save();
+            res.status(201).json({ message: 'Token generated successfully', tokenId: newToken._id, tokenNumber: newToken.tokenNumber });
 
-            res.status(201).json({ message: 'Token generated successfully', tokenNumber: newToken.tokenNumber });
+
+            // res.status(201).json({ message: 'Token generated successfully', tokenNumber: newToken.tokenNumber });
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Server error' });
         }
     }
 );
+
+router.get('/token-details/:tokenId', async (req, res) => {
+    const { tokenId } = req.params;
+
+    try {
+        // Find the token by ID
+        const token = await Token.findById(tokenId);
+        if (!token) {
+            return res.status(404).json({ message: 'Token not found' });
+        }
+
+        // Find the user and center details
+        const user = await User.findById(token.userId);
+        const akshayaCenter = await AkshayaCenter.findById(token.centerId);
+
+        if (!user || !akshayaCenter) {
+            return res.status(404).json({ message: 'User or Center not found' });
+        }
+
+        // Prepare the response details
+        const response = {
+            tokenNumber: token.tokenNumber,
+            date: token.createdAt.toLocaleDateString(),
+            username: user.name,
+            centerName: akshayaCenter.centerName,
+            location: akshayaCenter.location,
+            // services: akshayaCenter.services
+        };
+
+        res.status(200).json(response);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+
+router.get('/token-detail/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        
+        // Query the database to get all tokens for the user, sorted by date in descending order
+        // const tokens = await Token.find({ userId }).sort({ createdAt : -1 }); 
+        const tokens = await Token.find({ userId })
+            .sort({ createdAt: -1 }) // Sort by createdAt (latest first)
+            .populate('userId', 'name') // Populate 'username' field from the 'User' model
+            .populate('centerId', 'centerName location') // Populate 'centerName' and 'location' from the 'AkshayaCenter' model
+        
+        
+        if (!tokens || tokens.length === 0) {
+            return res.status(404).json({ message: 'No tokens found' });
+        }
+        
+        // Return all token details sorted by date (latest first)
+        res.status(200).json(tokens);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+});
+
+
+
+
+
 
 
 // Route to generate token number (appointment) for a user at a specific Akshaya Center

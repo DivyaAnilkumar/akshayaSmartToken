@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 
 const tokenSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    centerId: { type: mongoose.Schema.Types.ObjectId, ref: 'AkshayaCenter', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true },
+    centerId: { type: mongoose.Schema.Types.ObjectId, ref: 'akshayacenter', required: true },
     // serviceId: { type: mongoose.Schema.Types.ObjectId, ref: 'Service', required: true },
     tokenNumber: { type: Number, required: true },
     // tokenTime: { type: Date, required: true },

@@ -24,9 +24,9 @@ const Navbar = () => {
         ☰
       </button>
       <ul className={`navbar-links ${isOpen ? 'open' : ''}`}>
-        <li><Link to="/" onClick={handleLinkClick}>Home</Link></li>
+        <li><Link to="/home" onClick={handleLinkClick}>Home</Link></li>
         <li><Link to="/list" onClick={handleLinkClick}>About</Link></li>
-        <li><Link to="/services" onClick={handleLinkClick}>Services</Link></li>
+        <li><Link to="/tokens" onClick={handleLinkClick}>Tokens</Link></li>
         <li><Link to="/contact" onClick={handleLinkClick}>Contact</Link></li>
       </ul>
     </nav>
