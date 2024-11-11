@@ -15,8 +15,8 @@ function App() {
     
       
       <Routes>
-        <Route path="/" element={<Navbar/>}/>
-        <Route path="/list" element={<HomePage/>}/>
+        <Route path="/" element={<HomePage/>}/>
+        {/* <Route path="/list" element={<HomePage/>}/> */}
         <Route path="/center/:centerId" element={<CenterDetails />} />
         <Route path="/generate-token" element={<TokenGenerator/>}/>
         <Route path="/contact" element={<div>Contact Page</div>} />

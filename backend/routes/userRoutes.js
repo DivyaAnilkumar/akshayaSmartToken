@@ -272,7 +272,7 @@ router.get('/profile',
     }
 });
 
-// Update user profile
+//Update user profile
 router.put(
     '/profile',
     //authMiddleware,
