@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, CardContent, Typography, Grid, CircularProgress, Button } from '@mui/material';
+import Navbar from './Navbar';
 
 const TokenDetails = () => {
     const [tokens, setTokens] = useState([]);
@@ -44,6 +45,7 @@ const TokenDetails = () => {
     }
 
     return (
+        <><Navbar/>
         <div style={{ padding: '20px' }}>
             <Typography variant="h4" gutterBottom>
                 Token Details
@@ -84,6 +86,7 @@ const TokenDetails = () => {
                 <Typography variant="body1">No tokens found</Typography>
             )}
         </div>
+        </>
     );
 };
 

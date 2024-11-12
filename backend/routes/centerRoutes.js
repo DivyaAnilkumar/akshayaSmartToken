@@ -2,15 +2,14 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const AkshayaCenter = require('../models/AkshayaCenter');
 const Service = require('../models/serviceModel');
-// const authMiddleware = require('../middleware/authMiddleware');
-// const adminMiddleware = require('../middleware/adminMiddleware');
+
 
 const router = express.Router();
 
-// Route to toggle token generation for an Akshaya Center
+
 router.patch(
     '/toggle-token-generation',
-    // authMiddleware,
+    
     async (req, res) => {
         const { centerId, enableTokenGeneration } = req.body;
 
@@ -34,14 +33,14 @@ router.patch(
     }
 );
 
-// Route to add a new service for the Akshaya Center
+
 router.post(
     '/add-service',
-    // authMiddleware,
+   
     [
         body('centerId').notEmpty().withMessage('Center ID is required'),
         body('serviceName').notEmpty().withMessage('Service name is required'),
-        body('description').notEmpty().withMessage('Service description is required')
+        // body('description').notEmpty().withMessage('Service description is required')
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -49,13 +48,13 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { centerId, serviceName, description } = req.body;
+        const { centerId, serviceName } = req.body;
 
         try {
             const newService = new Service({
                 centerId,
                 serviceName,
-                description
+                // description
             });
 
             await newService.save();
@@ -67,10 +66,10 @@ router.post(
     }
 );
 
-// Route to edit an existing service
+
 router.patch(
     '/edit-service',
-    // authMiddleware,
+    
     [
         body('serviceId').notEmpty().withMessage('Service ID is required'),
         body('serviceName').optional().isString(),
@@ -103,7 +102,7 @@ router.patch(
 );
 router.patch(
     '/increase-servicing-token',
-    // authMiddleware,
+    
     [
         body('centerId').notEmpty().withMessage('Center ID is required')
     ],
@@ -116,13 +115,13 @@ router.patch(
         const { centerId } = req.body;
 
         try {
-            // Find the Akshaya Center by ID
+            
             const akshayaCenter = await AkshayaCenter.findById(centerId);
             if (!akshayaCenter) {
                 return res.status(404).json({ message: 'Akshaya Center not found' });
             }
 
-            // Increment the current servicing token number
+            
             akshayaCenter.currentServicingTokenNumber += 1;
             await akshayaCenter.save();
 
@@ -142,7 +141,7 @@ router.get(
         const { centerId } = req.params;
 
         try {
-            // Find the Akshaya Center by ID
+            
             const akshayaCenter = await AkshayaCenter.findById(centerId).select('centerName currentServicingTokenNumber currentPeopleCount status');
 
             if (!akshayaCenter) {
@@ -153,7 +152,7 @@ router.get(
                 return res.status(400).json({ message: 'Akshaya Center is currently unavailable' });
             }
 
-            // Send the current servicing token number and other details
+            
             res.status(200).json({
                 centerName: akshayaCenter.centerName,
                 currentServicingTokenNumber: akshayaCenter.currentServicingTokenNumber,

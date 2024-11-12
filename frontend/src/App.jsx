@@ -5,7 +5,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import { Route, Router, Routes  } from 'react-router-dom'
 import HomePage from './components/HomePage'
-import CenterDetails from './components/CenterDetails'
+// import CenterDetails from './components/CenterDetails'
 import TokenGenerator from './components/TokenGenerator'
 import Login from './components/Login'
 import Register from './components/Register'
@@ -25,9 +25,9 @@ function App() {
        <Route path="/" element={<Login/>}/>
        <Route path="/register" element={<Register/>}/>
         {/* <Route path="/home" element={<Navbar/>}/> */}
-        <Route path="/list" element={<HomePage/>}/>
-       <Route path="/center/:centerId" element={<CenterDetails />} />
-        <Route path="/generate-token" element={<TokenGenerator/>}/>
+        <Route path="/home" element={<HomePage/>}/>
+       <Route path="/center/:centerId" element={<TokenGenerator />} />
+        {/* <Route path="/generate-token" element={<TokenGenerator/>}/> */}
         <Route path="/tokens" element={<TokenDetails/>} />
         <Route path="/contact" element={<div>Contact Page</div>} />
        </Routes>

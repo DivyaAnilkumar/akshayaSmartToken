@@ -1,4 +1,4 @@
-// Navbar.js
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
@@ -10,7 +10,7 @@ const Navbar = () => {
     setIsOpen(!isOpen);
   };
 
-  // Close the menu when a link is clicked
+
   const handleLinkClick = () => {
     setIsOpen(false);
   };
@@ -18,7 +18,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-logo">
-        <h1>MySite</h1>
+        <h3>AkshayaToken</h3>
       </div>
       <button className="navbar-toggle" onClick={toggleMenu}>
         ☰

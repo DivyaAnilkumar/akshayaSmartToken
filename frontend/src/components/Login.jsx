@@ -60,7 +60,7 @@ function Login() {
             if (response.role === 'Admin') {
                 navigate('/admin'); // Redirect to admin dashboard
             } else {
-                navigate('/list'); // Redirect to user dashboard
+                navigate('/home'); // Redirect to user dashboard
             }
         },(error) => {
             console.error(error);

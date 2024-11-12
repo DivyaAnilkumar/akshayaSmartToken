@@ -12,18 +12,13 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch data from the backend
+ 
     const fetchCenters = async () => {
       try {
-        // const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).token : '';
+       
         
         const response = await axiosInstance.get('http://localhost:5000/api/users/search-akshaya-centers');
-        // Include token in the request header
-        // const response = await axios.get('http://localhost:5000/api/users/search-akshaya-centers', {
-        //   headers: {
-        //     Authorization: `Bearer ${token}`  // Add the token here
-        //   }
-        // });
+        
         setCenters(response.data);
       } catch (error) {
         console.error("Error fetching centers:", error);
