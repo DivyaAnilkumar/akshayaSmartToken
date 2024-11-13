@@ -10,6 +10,7 @@ import TokenGenerator from './components/TokenGenerator'
 import Login from './components/Login'
 import Register from './components/Register'
 import TokenDetails from './components/TokenDetails'
+import AdminPanel from './components/AdminPanel'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -24,6 +25,7 @@ function App() {
        <Routes>
        <Route path="/" element={<Login/>}/>
        <Route path="/register" element={<Register/>}/>
+       <Route path="/admin" element={<AdminPanel/>}/>
         {/* <Route path="/home" element={<Navbar/>}/> */}
         <Route path="/home" element={<HomePage/>}/>
        <Route path="/center/:centerId" element={<TokenGenerator />} />

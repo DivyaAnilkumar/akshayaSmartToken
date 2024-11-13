@@ -208,7 +208,7 @@ const Register = () => {
                   Select Role
                 </option>
                 <option value="user">User</option>
-                <option value="Admin">Admin</option>
+                <option value="admin">Admin</option>
                 <option value="Akshaya Center">Akshaya Center</option>
               </select>
               {errors.role && <p className="error-message">{errors.role}</p>}
@@ -249,7 +249,7 @@ const Register = () => {
               Register
             </button>
             <div className="login-link">
-              Already have an account? <a href="/login">Login</a>
+              Already have an account? <a href="/">Login</a>
             </div>
           </form>
         </div>

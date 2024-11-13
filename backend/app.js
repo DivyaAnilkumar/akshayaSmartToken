@@ -3,6 +3,7 @@ const connectDB = require('./db/connection');
 const centerRoutes = require('./routes/centerRoutes');
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const { checkTokens } = require('./tokenService');
 const cron = require('node-cron');
 
@@ -20,12 +21,12 @@ connectDB();
 
 app.use(express.json());
 
-
+app.use('/api/admin',adminRoutes)
 app.use('/api/auth', authRoutes);
 app.use('/api/centers', centerRoutes);
 app.use('/api/users', userRoutes);
 
-cron.schedule('* * * * *', () => {
+cron.schedule('0 9 * * *', () => {
   console.log('Running daily token check');
 checkTokens();
 });

@@ -53,12 +53,17 @@ function Login() {
     // Handle login logic here
     login(email, password).then(
         (response) => {
+          console.log("The Responsive is:",response);
          
           // Assuming the response contains the user details
 
             alert('Login successful');
-            if (response.role === 'Admin') {
+            
+            if (response.user.role === 'admin') {
                 navigate('/admin'); // Redirect to admin dashboard
+            }
+            else if(response.role === 'AkshayaCenter'){
+              navigate('/')
             } else {
                 navigate('/home'); // Redirect to user dashboard
             }

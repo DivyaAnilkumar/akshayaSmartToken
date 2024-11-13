@@ -13,7 +13,7 @@ const router = express.Router();
 
 
 router.get(
-  '/search-akshaya-centers', verifyToken, authorizeRoles("user"),
+  '/search-akshaya-centers', verifyToken, authorizeRoles("user,admin"),
   
   [
       query('location').optional().isString().withMessage('Location should be a valid string'),
